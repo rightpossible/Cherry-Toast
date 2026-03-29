@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:cherry_toast/cherry_toast_icon.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:cherry_toast/resources/colors.dart';
 import 'package:cherry_toast/resources/extensions.dart';
@@ -13,9 +11,8 @@ class CherryToast extends StatefulWidget {
 
   CherryToast({
     Key? key,
-    this.title,
-    required this.icon,
     required this.themeColor,
+    this.title,
     this.iconColor = Colors.black,
     this.action,
     this.backgroundColor = defaultBackgroundColor,
@@ -45,6 +42,9 @@ class CherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.inheritThemeColors = false,
     this.onToastClosed,
+    this.horizontalAlignment = CrossAxisAlignment.start,
+    this.titleDescriptionMargin = 0,
+    this.descriptionActionMargin = 0,
   }) : super(key: key) {
     assert(
       title != null || description != null,
@@ -82,12 +82,14 @@ class CherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.inheritThemeColors = false,
     this.onToastClosed,
+    this.horizontalAlignment = CrossAxisAlignment.start,
+    this.titleDescriptionMargin = 0,
+    this.descriptionActionMargin = 0,
   }) : super(key: key) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
     );
-    icon = Icons.check_circle;
     _initializeAttributes(successColor);
   }
 
@@ -121,12 +123,14 @@ class CherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.inheritThemeColors = false,
     this.onToastClosed,
+    this.horizontalAlignment = CrossAxisAlignment.start,
+    this.titleDescriptionMargin = 0,
+    this.descriptionActionMargin = 0,
   }) : super(key: key) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
     );
-    icon = Icons.error_rounded;
     _initializeAttributes(errorColor);
   }
 
@@ -160,12 +164,14 @@ class CherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.inheritThemeColors = false,
     this.onToastClosed,
+    this.horizontalAlignment = CrossAxisAlignment.start,
+    this.titleDescriptionMargin = 0,
+    this.descriptionActionMargin = 0,
   }) : super(key: key) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
     );
-    icon = Icons.warning_rounded;
     _initializeAttributes(warningColor);
   }
 
@@ -199,12 +205,14 @@ class CherryToast extends StatefulWidget {
     this.disableToastAnimation = false,
     this.inheritThemeColors = false,
     this.onToastClosed,
+    this.horizontalAlignment = CrossAxisAlignment.start,
+    this.titleDescriptionMargin = 0,
+    this.descriptionActionMargin = 0,
   }) : super(key: key) {
     assert(
       title != null || description != null,
       'Cherry toast must be initialized with minimum title or description',
     );
-    icon = Icons.info_rounded;
     _initializeAttributes(infoColor);
   }
 
@@ -214,108 +222,91 @@ class CherryToast extends StatefulWidget {
     iconSize = 20;
   }
 
-  ///Text widget displayed as a title in the toast
-  ///required parameter for all toast types
+  /// Text widget displayed as a title in the toast
+  /// required parameter for all toast types
   final Text? title;
 
-  ///Text widget displayed as a description in the toast
+  /// Text widget displayed as a description in the toast
   final Text? description;
 
-  ///THe action button displayed below description
-  ///by default there's no action added
+  /// The action button displayed below description
   final Text? action;
 
-  ///the toast icon, it's required when using the default constructor
-  ///
-  late IconData icon;
-
-  ///the Icon color
-  ///this parameter is only available on the default constructor
-  ///for the built-in themes the color  will be set automatically
+  /// The Icon color
+  /// this parameter is only available on the default constructor
+  /// for the built-in themes the color  will be set automatically
   late Color iconColor;
-  //background color of container
+
+  /// Background color of container
   final Color backgroundColor;
-  //box shadow color of container
+
+  /// Box shadow color of container
   final Color shadowColor;
-  //Custom widget displayed at the place of the predefined icons
+
+  /// Custom widget displayed at the place of the predefined icons
   final Widget? iconWidget;
 
-  ///the icon size
-  ///by default is 20
-  ///this parameter is available in default constructor
+  /// The icon size
+  /// this parameter is available in default constructor
   late double iconSize;
 
-  ///the toast display postion, possible values
-  ///```dart
-  ///{
-  ///top,
-  ///bottom
-  ///}
-  ///```
+  /// The toast display postion, possible values
+  /// ```dart
+  /// {
+  /// top,
+  /// bottom
+  /// }
+  /// ```
   final Position toastPosition;
 
-  ///The color that will be applied on the circle behind the icon
-  ///for better rendering the action button must have the same color
-  ///
+  /// The color that will be applied on the circle behind the icon
+  /// for better rendering the action button must have the same color
   late Color themeColor;
 
-  ///the function invoked when clicking on the action button
-  ///
+  /// The function invoked when clicking on the action button
   final Function? actionHandler;
 
-  ///The duration of the animation by default it's 1.5 seconds
-  ///
+  /// The duration of the animation by default it's 1.5 seconds
   final Duration animationDuration;
 
-  ///the animation curve by default it's set to `Curves.ease`
-  ///
+  /// The animation curve by default it's set to `Curves.ease`.
   final Cubic animationCurve;
 
-  ///The animation type applied on the toast
-  ///```dart
-  ///{
-  ///fromTop,
-  ///fromLeft,
-  ///fromRight
-  ///}
-  ///```
+  /// The animation type applied on the toast
+  /// ```dart
+  /// {
+  /// fromTop,
+  /// fromLeft,
+  /// fromRight
+  /// }
+  /// ```
   final AnimationType animationType;
 
-  ///indicates whether the toast will be hidden automatically or not
-  ///
+  /// Indicates whether the toast will be hidden automatically or not.
   final bool autoDismiss;
 
-  ///the duration of the toast if [autoDismiss] is true
-  ///by default it's 3 seconds
-  ///
+  /// The duration of the toast if [autoDismiss] is true
   final Duration toastDuration;
 
-  ///the layout of the toast
-  ///```dart
-  ///{
-  ///ltr,
-  ///rtl
-  ///}
-  ///
-
-  ///```
+  /// The layout of the toast
+  /// ```dart
+  /// {
+  /// ltr,
+  /// rtl
+  /// }
+  /// ```
   final TextDirection textDirection;
 
-  ///Display / Hide the close button icon
-  ///by default it's true
+  /// Display / Hide the close button icon
   final bool displayCloseButton;
 
-  ///define the border radius applied on the toast
-  ///by default it's 20
-  ///
+  /// Define the border radius applied on the toast
   final double borderRadius;
 
-  ///Define whether the icon will be  rendered or not
-  ///
+  /// Define whether the icon will be  rendered or not
   final bool displayIcon;
 
-  ///Define wether the animation on the icon will be rendered or not
-  ///
+  /// Define wether the animation on the icon will be rendered or not
   final bool enableIconAnimation;
 
   /// The attribute  is declaring a final variable named "width" of type double with a nullable value.
@@ -327,19 +318,28 @@ class CherryToast extends StatefulWidget {
   /// height attribute define the toast height
   final double? height;
 
-  ///Enable taost constraints customization (by default it's null)
+  /// Enable taost constraints customization (by default it's null)
   final BoxConstraints? constraints;
 
-  ///indicate whether the toast animation is enabled or not
-  ///by default the toast animation is enabled
+  /// Indicate whether the toast animation is enabled or not
+  /// by default the toast animation is enabled
   final bool disableToastAnimation;
 
   /// Indicate toast should inherit theme colors sheme, to apply in background
   /// and shadow color.
   final bool inheritThemeColors;
 
-  ///Callback invoked when toast get dismissed (closed by button or dismissed automtically)
+  /// Callback invoked when toast get dismissed (closed by button or dismissed automtically)
   final Function()? onToastClosed;
+
+  /// Horizontal alignment display of the toast content
+  final CrossAxisAlignment horizontalAlignment;
+
+  /// The space rendered between the title and description widgets.
+  final double titleDescriptionMargin;
+
+  /// The space rendered between the description and actions widgets.
+  final double descriptionActionMargin;
 
   void show(BuildContext context) {
     overlayEntry = _overlayEntryBuilder();
@@ -530,10 +530,9 @@ class _CherryToastState extends State<CherryToast>
                   color: Theme.of(context).colorScheme.surface,
                   boxShadow: [
                     _createToastBoxShadow(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.12),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(
+                            alpha: 0.12,
+                          ),
                     ),
                   ],
                 )
@@ -542,45 +541,22 @@ class _CherryToastState extends State<CherryToast>
           width: widget.width,
           height: widget.height,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 2,
                   child: Row(
-                    crossAxisAlignment:
-                        widget.description == null && widget.action == null
-                            ? CrossAxisAlignment.center
-                            : CrossAxisAlignment.start,
                     children: [
-                      //TODO refactor `iconWidget` and `titleWidget` to avoid duplication
-                      if (widget.iconWidget != null)
-                        widget.iconWidget!
-                      else if (widget.displayIcon)
-                        CherryToastIcon(
-                          color: widget.themeColor,
-                          icon: widget.icon,
-                          iconSize: widget.iconSize,
-                          iconColor: widget.iconColor,
-                          enableAnimation: widget.enableIconAnimation,
-                        )
-                      else
-                        Container(),
+                      if (widget.displayIcon && widget.iconWidget != null)
+                        widget.iconWidget!,
                       renderToastContent(),
                     ],
                   ),
                 ),
-                if (widget.displayCloseButton)
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      right: 10,
-                    ),
-                    child: renderCloseButton(context),
-                  ),
+                if (widget.displayCloseButton) renderCloseButton(context),
               ],
             ),
           ),
@@ -627,31 +603,25 @@ class _CherryToastState extends State<CherryToast>
         child: Directionality(
           textDirection: widget.textDirection,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: widget.horizontalAlignment,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (widget.title != null) widget.title!,
-              if (widget.description != null)
-                Column(
-                  children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    widget.description!,
-                  ],
+              if (widget.title != null && widget.description != null)
+                SizedBox(
+                  height: widget.titleDescriptionMargin,
+                ),
+              if (widget.description != null) widget.description!,
+              if (widget.action != null && widget.description != null)
+                SizedBox(
+                  height: widget.descriptionActionMargin,
                 ),
               if (widget.action != null)
-                Column(
-                  children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        widget.actionHandler?.call();
-                      },
-                      child: widget.action,
-                    ),
-                  ],
+                InkWell(
+                  onTap: () {
+                    widget.actionHandler?.call();
+                  },
+                  child: widget.action,
                 ),
             ],
           ),
